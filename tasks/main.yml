@@ -1,0 +1,42 @@
+---
+# tasks file for install-docker
+- name: Install required package(s) (Debian)
+  ansible.builtin.apt:
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+    cache_valid_time: 3600
+  loop: "{{ install_docker_required_packages }}"
+
+- name: Add Docker GPG apt Key
+  ansible.builtin.apt_key:
+    url: https://download.docker.com/linux/debian/gpg
+    state: present
+
+- name: Add Docker Repository
+  ansible.builtin.apt_repository:
+    repo: deb https://download.docker.com/linux/debian {{ ansible_distribution_release }} stable
+    state: present
+
+- name: Install new package(s) (Debian)
+  ansible.builtin.apt:
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+  loop: "{{ install_docker_new_packages }}"
+
+- name: Test Docker installation
+  ansible.builtin.shell: "docker run hello-world"
+  register: install_docker_test_run
+  
+- debug: msg="Docker successfully installed"
+  when: install_docker_test_run.rc == 0
+
+- debug: msg="Docker installation failed"
+  when: install_docker_test_run.rc != 0
+  
+- name: "Add authorized users to Docker group"
+  ansible.builtin.user:
+    name: "{{ item }}"
+    groups: docker
+  loop: "{{ install_docker_authorized_users }}"

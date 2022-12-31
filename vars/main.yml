@@ -1,0 +1,5 @@
+---
+# vars file for install-docker
+install_docker_authorized_users: 
+  - dev
+  - admin

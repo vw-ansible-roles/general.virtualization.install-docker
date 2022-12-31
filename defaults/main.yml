@@ -1,0 +1,13 @@
+---
+# defaults file for install-docker
+install_docker_required_packages:
+  - ca-certificates
+  - curl
+  - gnupg
+  - lsb-release
+
+install_docker_new_packages:
+  - docker-ce
+  - docker-ce-cli
+  - containerd.io
+  - docker-compose-plugin
