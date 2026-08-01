@@ -39,4 +39,5 @@
   ansible.builtin.user:
     name: "{{ item }}"
     groups: docker
+    append: yes
   loop: "{{ install_docker_authorized_users }}"
